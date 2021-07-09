@@ -7,7 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const signup_router = require("./router/signup.router.js");
 const login_router = require("./router/login.router.js");
