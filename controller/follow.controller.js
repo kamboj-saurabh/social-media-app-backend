@@ -103,7 +103,7 @@ async function getFollowSuggestions(req, res){
     let followingIds = following.map(item => item.__follows)
 
     const users = await User.find({}).select('name username profileImg')
-   
+    
     let suggestions = []
     suggestions = users.filter(userItem => {
         const newFollowId = userItem._id.toString()
@@ -112,7 +112,7 @@ async function getFollowSuggestions(req, res){
         }
         return true
     })
-    res.status(200).json({success:true, suggestions})
+    res.status(200).json({success:true, data:suggestions})
   }catch(err){
     res.status(500).json({success:false, message:"no suggestions found"})
   }
