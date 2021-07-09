@@ -101,20 +101,20 @@ async function getFollowSuggestions(req, res){
     const followResponse = await getFollowers(userId)
     const following = followResponse.following
     let followingIds = following.map(item => item.__follows)
-    // console.log({followingIds})
+
     const users = await User.find({}).select('name username profileImg')
-    // console.log(users)
+   
     let suggestions = []
     suggestions = users.filter(userItem => {
         const newFollowId = userItem._id.toString()
-        if(followingIds.find(item => item._id ==newFollowId)){
+        if(followingIds.find(item => item._id ==newFollowId) || newFollowId == userId.toString()){
           return false
         }
         return true
     })
     res.status(200).json({success:true, suggestions})
   }catch(err){
-    res.status(500).json({success:false, message:"You follow all"})
+    res.status(500).json({success:false, message:"no suggestions found"})
   }
 }
 
