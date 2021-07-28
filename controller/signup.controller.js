@@ -1,5 +1,7 @@
+require('dotenv').config()
 const express = require('express')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const {User} = require('../models/user.model.js')
 
 async function signupUser(req, res){
@@ -17,9 +19,12 @@ async function signupUser(req, res){
 
       const newUser = new User({email:newUserObj.email, password:hashedPassword,
       username: newUserObj.username, name: newUserObj.name })
-
       const savedData = await newUser.save()
-      res.status(201).json({success:true, data: savedData})
+
+      const userId = savedData._id
+      const accessToken = jwt.sign({userId}, process.env.ACCESS_TOKEN, {expiresIn:'24h'})
+
+      res.status(201).json({success:true, newUser: savedData, accessToken})
   
   }catch(err){
     res.status(500).json({success:false, message:"Unable to signup", errorMessage:err.message})
